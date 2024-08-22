@@ -4,14 +4,13 @@ const mongoose = require('mongoose');
 require('dotenv').config(); 
 const app = express();
 const port = process.env.PORT || 5000;
-
-// CORS configuration
 app.use(cors({
-  origin: 'https://mugilherbals.vercel.app/', // Update with your frontend URL
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], // Allowed headers
+  origin: ['https://mugilherbals.vercel.app', 'http://localhost:5173'], // Allow both your local and production URLs
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], 
 }));
+
 
 app.use(express.json());
 
