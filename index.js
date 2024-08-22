@@ -4,39 +4,29 @@ const mongoose = require('mongoose');
 require('dotenv').config(); 
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(cors());
-app.use(express.json());
-const allowCors = fn => async (req, res) => {
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-  return await fn(req, res)
-}
 
-const handler = (req, res) => {
-  const d = new Date()
-  res.end(d.toString())
-}  
+// CORS configuration
+app.use(cors({
+  origin: 'http://localhost:5173', // Update with your frontend URL
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'], // Allowed headers
+}));
+
+app.use(express.json());
+
 const mongoURI = 'mongodb+srv://dhinaashwin11:MongoDBpassword@cluster-1.golhm.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster-1';
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
   .then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => console.error('MongoDB connection error:', err));
+
 app.get('/', (req, res) => {
   res.send('Connected');
 });
+
 // Define Schemas and Models
 const itemSchema = new mongoose.Schema({
   id: String,
@@ -162,5 +152,5 @@ app.get('/orders', async (req, res) => {
   }
 });
 
-// // Start the server
+// Start the server
 app.listen(port, () => console.log(`Server running on port ${port}`));
